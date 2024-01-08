@@ -6,7 +6,7 @@ from PIL import Image
 
 
 def print_banner():
-    print('''
+    print("""
                      _____ __               
         ____  __  __/ ___// /____  ____ _   
        / __ \/ / / /\__ \/ __/ _ \/ __ `/   
@@ -14,36 +14,36 @@ def print_banner():
      / .___/\__, //____/\__/\___/\__, /     
     /_/    /____/               /____/      
                                              
-    ''')
+    """)
 
 
 def get_args():
-    parser = argparse.ArgumentParser(description='Embed/Extract data to/from images')
+    parser = argparse.ArgumentParser(description="Embed/Extract data to/from images")
 
-    parser.add_argument('command', help='embed/extract')
-    parser.add_argument('image', help='image for embedding/extracting data to/from')
-    parser.add_argument('-s','--secret', help='secret text to be embedded')
+    parser.add_argument("command", help="embed/extract")
+    parser.add_argument("image", help="image for embedding/extracting data to/from")
+    parser.add_argument("-s","--secret", help="secret text to be embedded")
 
     args = parser.parse_args()
 
-    if args.command == 'embed' and not args.secret:
-        parser.error('enter the secret text to be embedded')
+    if args.command == "embed" and not args.secret:
+        parser.error("enter the secret text to be embedded")
 
     return args
 
 
 def secret_to_binary(secret):
-    secret += '\x00'
-    binary_secret = ''
+    secret += "\x00"
+    binary_secret = ""
 
     for char in secret:
-        binary_secret += format(ord(char), '08b')
+        binary_secret += format(ord(char), "08b")
         
     return binary_secret
 
 
 def image_to_pixels(image):
-    image = Image.open(image, 'r')
+    image = Image.open(image, "r")
 
     pixels = list(image.getdata())
 
@@ -59,10 +59,10 @@ def modify_pixel_list(pixel_list, binary_secret):
     data_length = len(binary_secret)
 
     for bit in range(data_length):
-        if binary_secret[bit] == '0' and pixel_list[bit]%2 != 0:
+        if binary_secret[bit] == "0" and pixel_list[bit]%2 != 0:
             pixel_list[bit] -= 1
     
-        if binary_secret[bit] == '1' and pixel_list[bit]%2 == 0:
+        if binary_secret[bit] == "1" and pixel_list[bit]%2 == 0:
             pixel_list[bit] -= 1
     
     return pixel_list
@@ -82,7 +82,7 @@ def make_secret_pixels(modified_pixel_list):
 
 
 def pixel_to_image(image, secret_pixels):
-    image = Image.open(image, 'r')
+    image = Image.open(image, "r")
 
     image_length = image.size[0]
 
@@ -102,17 +102,17 @@ def pixel_to_image(image, secret_pixels):
 
 
 def pixel_to_secret(pixel_list):
-    secret_text = ''
-    binary_secret = ''
+    secret_text = ""
+    binary_secret = ""
     
     pixel = 0
 
     while True:
         if (pixel_list[pixel]%2 == 0):
-            binary_secret += '0'
+            binary_secret += "0"
         
         else:
-            binary_secret += '1'
+            binary_secret += "1"
         
         if (pixel+1)%8 == 0:
             ascii = int(binary_secret, 2)
@@ -122,7 +122,7 @@ def pixel_to_secret(pixel_list):
             
             else:
                 secret_text += chr(ascii)
-                binary_secret = ''
+                binary_secret = ""
         
         pixel += 1
     
@@ -140,9 +140,9 @@ def embed(image, secret):
 
     secret_image = pixel_to_image(image, secret_pixels)
 
-    secret_image.save('secret_image.png')
+    secret_image.save("secret_image.png")
 
-    print(f'The given data has been embedded into {image}')
+    print(f"The given data has been embedded into {image}")
 
 
 def extract(image):
@@ -152,11 +152,11 @@ def extract(image):
 
     for char in secret_text:
         if ord(char) not in range(0, 256):
-            print(f'No embedded data found inside {image}')
+            print(f"No embedded data found inside {image}")
             
             return
     
-    print(f'The secret data inside {image} is\n{secret_text}') 
+    print(f"The secret data inside {image} is\n{secret_text}") 
 
 
 def main():
@@ -164,12 +164,12 @@ def main():
 
     args = get_args()
 
-    if args.command == 'embed':
+    if args.command == "embed":
         embed(args.image, args.secret)
     
-    if args.command == 'extract':
+    if args.command == "extract":
         extract(args.image)
         
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
