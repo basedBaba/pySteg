@@ -15,10 +15,16 @@ Embed/Extract data to/from images using LSB (Least Significant Bit) image stegan
 ## Installation
 
 ```
-git clone https://github.com/based-baba/pySteg
+# Clone the project locally
+git clone https://github.com/basedBaba/pySteg
 
+# Create a virtual environment and install the required packages
 cd pySteg
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
 
+# Make the script executable
 chmod +x pysteg.py
 
 ./pysteg.py -h
