@@ -6,7 +6,7 @@ from PIL import Image
 
 
 def print_banner():
-    print("""
+    print(r"""
                      _____ __               
         ____  __  __/ ___// /____  ____ _   
        / __ \/ / / /\__ \/ __/ _ \/ __ `/   
